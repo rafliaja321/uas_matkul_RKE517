@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistem Informasi Klinik Cipta Sehat - Login</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%234a90e2" width="1200" height="800"/><path fill="%23357abd" d="M0 400L1200 300V800H0z"/><rect fill="%23ffffff" opacity="0.1" x="100" y="100" width="400" height="600" rx="10"/><rect fill="%23ffffff" opacity="0.1" x="700" y="150" width="400" height="500" rx="10"/></svg>');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .login-container {
+        background: rgba(41, 128, 185, 0.95);
+        padding: 50px 60px;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        width: 450px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+      }
+
+      .logo {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 20px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .logo svg {
+        width: 60px;
+        height: 60px;
+      }
+
+      .title {
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 14px;
+        margin-bottom: 40px;
+        font-style: italic;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .form-group label {
+        color: white;
+        font-weight: 600;
+        min-width: 90px;
+        text-align: right;
+        font-size: 15px;
+      }
+
+      .form-group input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        font-size: 14px;
+        background: white;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: white;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+
+      .login-btn {
+        background: white;
+        color: #2980b9;
+        border: none;
+        padding: 12px 50px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .login-btn:hover {
+        background: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .login-btn:active {
+        transform: translateY(0);
+      }
+
+      .footer-text {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 11px;
+        margin-top: 30px;
+        line-height: 1.5;
+      }
+
+      /* Alert messages */
+      .alert-message {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+
+      .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 2px solid #10b981;
+      }
+
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 2px solid #ef4444;
+      }
+
+      /* Decorative elements */
+      .tree-left,
+      .tree-right {
+        position: fixed;
+        width: 150px;
+        height: 200px;
+        opacity: 0.3;
+      }
+
+      .tree-left {
+        left: 50px;
+        top: 50px;
+      }
+
+      .tree-right {
+        right: 50px;
+        top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Decorative trees -->
+    <div class="tree-left">
+      <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+        <rect x="45" y="80" width="10" height="70" fill="#8B4513" />
+        <circle cx="50" cy="70" r="35" fill="#228B22" opacity="0.8" />
+        <circle cx="35" cy="60" r="25" fill="#228B22" opacity="0.9" />
+        <circle cx="65" cy="60" r="25" fill="#228B22" opacity="0.9" />
+        <circle cx="50" cy="45" r="30" fill="#2E8B57" />
+      </svg>
+    </div>
+    <div class="tree-right">
+      <svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+        <rect x="45" y="80" width="10" height="70" fill="#8B4513" />
+        <circle cx="50" cy="70" r="35" fill="#228B22" opacity="0.8" />
+        <circle cx="35" cy="60" r="25" fill="#228B22" opacity="0.9" />
+        <circle cx="65" cy="60" r="25" fill="#228B22" opacity="0.9" />
+        <circle cx="50" cy="45" r="30" fill="#2E8B57" />
+      </svg>
+    </div>
+
+    <div class="login-container">
+      <div class="logo">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Medical cross with shield -->
+          <path
+            d="M50 10 L60 25 L75 25 L63 35 L68 50 L50 40 L32 50 L37 35 L25 25 L40 25 Z"
+            fill="#2980b9"
+          />
+          <rect x="43" y="30" width="14" height="45" rx="2" fill="#e74c3c" />
+          <rect x="30" y="43" width="40" height="14" rx="2" fill="#e74c3c" />
+          <circle cx="50" cy="52" r="8" fill="white" />
+        </svg>
+      </div>
+
+      <h1 class="title">Sistem Informasi Klinik Cipta Sehat</h1>
+      <p class="subtitle">"Membangun Kesehatan, Menciptakan Kesejahteraan"</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            placeholder="Masukkan username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Masukkan password"
+          />
+        </div>
+
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+
+      <p class="footer-text">
+        Jika anda belum terdaftar, silahkan hubungi<br />
+        call/wa/sms: 08123456789
+      </p>
+    </div>
+
+    <script>
+      // Database user credentials
+      const users = {
+        "dr.rafli": {
+          password: "raflidr321",
+          role: "dokter",
+          name: "Dr. Rafli Susanto",
+          dashboard: "dashboard-dokter.html",
+        },
+        "pmik-abdul": {
+          password: "abdulkj321",
+          role: "rm",
+          name: "Abdul Karim",
+          dashboard: "dashboard-petugas-rm.html",
+        },
+        itbernadia: {
+          password: "bernadia321",
+          role: "it",
+          name: "Bernadia Putri",
+          dashboard: "dashboard-petugas-it.html",
+        },
+      };
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const username = document.getElementById("username").value.trim();
+          const password = document.getElementById("password").value;
+
+          // Validate input
+          if (!username || !password) {
+            showAlert("Mohon isi username dan password!", "error");
+            return;
+          }
+
+          // Check credentials
+          if (users[username]) {
+            if (users[username].password === password) {
+              // Login successful
+              showAlert(
+                "Login berhasil! Mengalihkan ke dashboard...",
+                "success",
+              );
+
+              // Save user data to sessionStorage
+              sessionStorage.setItem("isLoggedIn", "true");
+              sessionStorage.setItem("username", username);
+              sessionStorage.setItem("userRole", users[username].role);
+              sessionStorage.setItem("userName", users[username].name);
+
+              // Also save to localStorage for compatibility
+              localStorage.setItem("username", users[username].name);
+              localStorage.setItem("role", users[username].role);
+
+              // Redirect to appropriate dashboard after short delay
+              setTimeout(function () {
+                window.location.href = users[username].dashboard;
+              }, 1000);
+            } else {
+              // Wrong password
+              showAlert("Password salah! Silakan coba lagi.", "error");
+              document.getElementById("password").value = "";
+              document.getElementById("password").focus();
+            }
+          } else {
+            // Username not found
+            showAlert("Username tidak ditemukan!", "error");
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("username").focus();
+          }
+        });
+
+      function showAlert(message, type) {
+        // Remove existing alert if any
+        const existingAlert = document.querySelector(".alert-message");
+        if (existingAlert) {
+          existingAlert.remove();
+        }
+
+        // Create alert element
+        const alert = document.createElement("div");
+        alert.className = "alert-message alert-" + type;
+        alert.textContent = message;
+
+        // Add to form
+        const form = document.getElementById("loginForm");
+        form.insertBefore(alert, form.firstChild);
+
+        // Remove after 3 seconds
+        setTimeout(function () {
+          alert.style.animation = "fadeOut 0.3s ease";
+          setTimeout(function () {
+            alert.remove();
+          }, 300);
+        }, 3000);
+      }
+
+      // Check if already logged in
+      window.onload = function () {
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+          const role = sessionStorage.getItem("userRole");
+          const username = sessionStorage.getItem("username");
+
+          // Redirect to appropriate dashboard based on role
+          if (users[username]) {
+            window.location.href = users[username].dashboard;
+          }
+        }
+      };
+    </script>
+  </body>
+</html>

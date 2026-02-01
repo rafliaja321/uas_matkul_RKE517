@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Petugas RM - Sistem Informasi Rumah Sakit</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .navbar h2 {
+        color: #11998e;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .user-info span {
+        color: #555;
+        font-weight: 500;
+      }
+
+      .logout-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background 0.3s;
+      }
+
+      .logout-btn:hover {
+        background: #c0392b;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+      }
+
+      .tab-container {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .tab-btn {
+        background: white;
+        color: #11998e;
+        border: 2px solid #11998e;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        flex: 1;
+      }
+
+      .tab-btn.active {
+        background: #11998e;
+        color: white;
+      }
+
+      .tab-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .card h3 {
+        color: #11998e;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .icon {
+        font-size: 1.5rem;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-family: inherit;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .btn {
+        background: #11998e;
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+        margin-top: 1rem;
+      }
+
+      .btn:hover {
+        background: #0e8273;
+      }
+
+      .btn-full {
+        width: 100%;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      table th {
+        background: #11998e;
+        color: white;
+        padding: 1rem;
+        text-align: left;
+      }
+
+      table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .action-btn {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        margin-right: 0.5rem;
+      }
+
+      .action-btn:hover {
+        background: #2980b9;
+      }
+
+      .action-btn.delete {
+        background: #e74c3c;
+      }
+
+      .action-btn.delete:hover {
+        background: #c0392b;
+      }
+
+      .search-box {
+        margin-bottom: 1rem;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 0.9rem;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .stat-card h4 {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.9;
+      }
+
+      .stat-card h2 {
+        font-size: 2rem;
+      }
+
+      .report-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .report-card {
+        background: white;
+        border: 2px solid #11998e;
+        border-radius: 10px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .report-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .report-card h4 {
+        color: #11998e;
+        margin-bottom: 0.5rem;
+      }
+
+      .report-card p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <h2>🏥 Dashboard Petugas Rekam Medis</h2>
+      <div class="user-info">
+        <span>👤 <span id="petugasName">-</span></span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- Stats Dashboard -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Total Pasien</h4>
+          <h2>247</h2>
+        </div>
+        <div
+          class="stat-card"
+          style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+        >
+          <h4>Pasien Baru Bulan Ini</h4>
+          <h2>28</h2>
+        </div>
+        <div
+          class="stat-card"
+          style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+        >
+          <h4>Pasien Hari Ini</h4>
+          <h2>12</h2>
+        </div>
+        <div
+          class="stat-card"
+          style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+        >
+          <h4>Rekam Medis Aktif</h4>
+          <h2>145</h2>
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tab-container">
+        <button class="tab-btn active" onclick="openTab('pasienBaru')">
+          ➕ Pendaftaran Pasien Baru
+        </button>
+        <button class="tab-btn" onclick="openTab('pasienLama')">
+          👥 Pendaftaran Pasien Lama
+        </button>
+        <button class="tab-btn" onclick="openTab('laporan')">📊 Laporan</button>
+      </div>
+
+      <!-- Tab: Pendaftaran Pasien Baru -->
+      <div id="pasienBaru" class="tab-content active">
+        <div class="card">
+          <h3><span class="icon">➕</span> Form Pendaftaran Pasien Baru</h3>
+          <form id="formPasienBaru">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nomor Rekam Medis</label>
+                <input
+                  type="text"
+                  id="noRM"
+                  placeholder="Auto Generate"
+                  readonly
+                  style="background: #f0f0f0"
+                />
+              </div>
+              <div class="form-group">
+                <label>NIK</label>
+                <input
+                  type="text"
+                  id="nik"
+                  placeholder="Nomor Induk Kependudukan"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input
+                  type="text"
+                  id="namaLengkap"
+                  placeholder="Nama sesuai KTP"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Tanggal Lahir</label>
+                <input type="date" id="tanggalLahir" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <select id="jenisKelamin" required>
+                  <option value="">Pilih</option>
+                  <option value="Laki-laki">Laki-laki</option>
+                  <option value="Perempuan">Perempuan</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Golongan Darah</label>
+                <select id="golDarah">
+                  <option value="">Pilih</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="AB">AB</option>
+                  <option value="O">O</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Alamat</label>
+              <textarea
+                id="alamat"
+                placeholder="Alamat lengkap"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>No. Telepon</label>
+                <input
+                  type="tel"
+                  id="telepon"
+                  placeholder="08xxxxxxxxxx"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Penjamin</label>
+                <select id="penjamin" required>
+                  <option value="">Pilih Penjamin</option>
+                  <option value="BPJS">BPJS</option>
+                  <option value="Umum">Umum</option>
+                  <option value="Asuransi">Asuransi Swasta</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-full">
+              Daftar Pasien Baru
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab: Pendaftaran Pasien Lama -->
+      <div id="pasienLama" class="tab-content">
+        <div class="card">
+          <h3>
+            <span class="icon">👥</span> Pendaftaran Pasien Lama (Kunjungan
+            Ulang)
+          </h3>
+
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchPasienLama"
+              placeholder="🔍 Cari pasien berdasarkan nama atau No. RM..."
+            />
+          </div>
+
+          <form id="formPasienLama">
+            <div class="form-row">
+              <div class="form-group">
+                <label>No. Rekam Medis</label>
+                <input
+                  type="text"
+                  id="noRMLama"
+                  placeholder="Masukkan No. RM"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Nama Pasien</label>
+                <input
+                  type="text"
+                  id="namaPasienLama"
+                  placeholder="Auto fill setelah input No. RM"
+                  readonly
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tanggal Kunjungan</label>
+                <input type="date" id="tanggalKunjungan" required />
+              </div>
+              <div class="form-group">
+                <label>Poliklinik Tujuan</label>
+                <select id="poliklinik" required>
+                  <option value="">Pilih Poliklinik</option>
+                  <option value="Poli Umum">Poli Umum</option>
+                  <option value="Poli Gigi">Poli Gigi</option>
+                  <option value="Poli Anak">Poli Anak</option>
+                  <option value="Poli Kandungan">Poli Kandungan</option>
+                  <option value="Poli Mata">Poli Mata</option>
+                  <option value="Poli THT">Poli THT</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Keluhan</label>
+              <textarea id="keluhan" placeholder="Keluhan pasien..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-full">Daftar Kunjungan</button>
+          </form>
+
+          <h4 style="color: #11998e; margin-top: 2rem; margin-bottom: 1rem">
+            Daftar Pasien Terdaftar
+          </h4>
+          <table>
+            <thead>
+              <tr>
+                <th>No. RM</th>
+                <th>Nama Pasien</th>
+                <th>Tanggal Lahir</th>
+                <th>Alamat</th>
+                <th>Telepon</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="daftarPasien">
+              <tr>
+                <td>RM-2025-001</td>
+                <td>Ahmad Rizki</td>
+                <td>15/05/1990</td>
+                <td>Jl. Merdeka No. 123, Jakarta</td>
+                <td>081234567890</td>
+                <td>
+                  <button class="action-btn">Pilih</button>
+                  <button class="action-btn">Detail</button>
+                </td>
+              </tr>
+              <tr>
+                <td>RM-2025-002</td>
+                <td>Siti Nurhaliza</td>
+                <td>22/08/1985</td>
+                <td>Jl. Sudirman No. 45, Bandung</td>
+                <td>082345678901</td>
+                <td>
+                  <button class="action-btn">Pilih</button>
+                  <button class="action-btn">Detail</button>
+                </td>
+              </tr>
+              <tr>
+                <td>RM-2025-003</td>
+                <td>Budi Santoso</td>
+                <td>10/12/1978</td>
+                <td>Jl. Gatot Subroto No. 88, Surabaya</td>
+                <td>083456789012</td>
+                <td>
+                  <button class="action-btn">Pilih</button>
+                  <button class="action-btn">Detail</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab: Laporan -->
+      <div id="laporan" class="tab-content">
+        <div class="card">
+          <h3><span class="icon">📊</span> Laporan Rekam Medis</h3>
+
+          <div class="report-section">
+            <div class="report-card" onclick="generateReport('pasienBaru')">
+              <h4>📈 Laporan Pasien Baru</h4>
+              <p>Laporan data pasien baru berdasarkan periode tertentu</p>
+            </div>
+
+            <div class="report-card" onclick="generateReport('kunjungan')">
+              <h4>🏥 Laporan Kunjungan</h4>
+              <p>Laporan jumlah kunjungan pasien per poliklinik</p>
+            </div>
+
+            <div class="report-card" onclick="generateReport('penjamin')">
+              <h4>💳 Laporan Berdasarkan Penjamin</h4>
+              <p>Statistik pasien berdasarkan jenis penjamin</p>
+            </div>
+
+            <div class="report-card" onclick="generateReport('bulanan')">
+              <h4>📅 Laporan Bulanan</h4>
+              <p>Rekap data rekam medis per bulan</p>
+            </div>
+
+            <div class="report-card" onclick="generateReport('demografi')">
+              <h4>👥 Laporan Demografi</h4>
+              <p>Analisis pasien berdasarkan usia dan jenis kelamin</p>
+            </div>
+
+            <div class="report-card" onclick="generateReport('custom')">
+              <h4>🔧 Laporan Custom</h4>
+              <p>Buat laporan sesuai kebutuhan khusus</p>
+            </div>
+          </div>
+
+          <div style="margin-top: 2rem">
+            <h4 style="color: #11998e; margin-bottom: 1rem">
+              Generate Laporan
+            </h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Jenis Laporan</label>
+                <select id="jenisLaporan">
+                  <option value="">Pilih Jenis Laporan</option>
+                  <option value="harian">Laporan Harian</option>
+                  <option value="mingguan">Laporan Mingguan</option>
+                  <option value="bulanan">Laporan Bulanan</option>
+                  <option value="tahunan">Laporan Tahunan</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Periode Dari</label>
+                <input type="date" id="periodeDari" />
+              </div>
+              <div class="form-group">
+                <label>Periode Sampai</label>
+                <input type="date" id="periodeSampai" />
+              </div>
+            </div>
+            <button class="btn btn-full" onclick="downloadReport()">
+              📥 Download Laporan (PDF)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Set nama petugas dari localStorage
+      document.addEventListener("DOMContentLoaded", function () {
+        const username = localStorage.getItem("username") || "Petugas RM";
+        document.getElementById("petugasName").textContent = username;
+
+        // Generate nomor RM otomatis
+        generateNoRM();
+      });
+
+      // Tab switching
+      function openTab(tabName) {
+        const tabs = document.querySelectorAll(".tab-content");
+        const buttons = document.querySelectorAll(".tab-btn");
+
+        tabs.forEach((tab) => tab.classList.remove("active"));
+        buttons.forEach((btn) => btn.classList.remove("active"));
+
+        document.getElementById(tabName).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      // Generate Nomor RM
+      function generateNoRM() {
+        const year = new Date().getFullYear();
+        const random = Math.floor(Math.random() * 1000)
+          .toString()
+          .padStart(3, "0");
+        document.getElementById("noRM").value = `RM-${year}-${random}`;
+      }
+
+      // Form Pasien Baru
+      document
+        .getElementById("formPasienBaru")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const noRM = document.getElementById("noRM").value;
+          const nama = document.getElementById("namaLengkap").value;
+
+          alert(
+            `Pasien baru berhasil didaftarkan!\n\nNo. RM: ${noRM}\nNama: ${nama}`,
+          );
+          this.reset();
+          generateNoRM();
+        });
+
+      // Form Pasien Lama
+      document
+        .getElementById("formPasienLama")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const noRM = document.getElementById("noRMLama").value;
+          const poli = document.getElementById("poliklinik").value;
+
+          alert(
+            `Kunjungan berhasil didaftarkan!\n\nNo. RM: ${noRM}\nPoliklinik: ${poli}`,
+          );
+          this.reset();
+        });
+
+      // Auto fill nama pasien
+      document
+        .getElementById("noRMLama")
+        .addEventListener("change", function () {
+          const noRM = this.value;
+          // Simulasi auto fill (dalam implementasi nyata, ambil dari database)
+          if (noRM === "RM-2025-001") {
+            document.getElementById("namaPasienLama").value = "Ahmad Rizki";
+          } else if (noRM === "RM-2025-002") {
+            document.getElementById("namaPasienLama").value = "Siti Nurhaliza";
+          }
+        });
+
+      // Generate Report
+      function generateReport(type) {
+        alert(`Menampilkan laporan: ${type}`);
+      }
+
+      // Download Report
+      function downloadReport() {
+        const jenis = document.getElementById("jenisLaporan").value;
+        if (!jenis) {
+          alert("Silakan pilih jenis laporan terlebih dahulu!");
+          return;
+        }
+        alert(
+          `Mendownload laporan ${jenis}...\n\nFile akan tersimpan dalam format PDF.`,
+        );
+      }
+
+      // Logout
+      function logout() {
+        if (confirm("Apakah Anda yakin ingin logout?")) {
+          // Clear both localStorage and sessionStorage
+          localStorage.removeItem("username");
+          localStorage.removeItem("role");
+          sessionStorage.removeItem("isLoggedIn");
+          sessionStorage.removeItem("username");
+          sessionStorage.removeItem("userRole");
+          sessionStorage.removeItem("userName");
+          window.location.href = "index.html";
+        }
+      }
+    </script>
+  </body>
+</html>
